@@ -1,9 +1,10 @@
 #include "Scope.h"
 #include <libraries/ne10/NE10.h>
 #include <math.h>
-#include <WSServer.h>
+#include <libraries/WSServer/WSServer.h>
 #include <JSON.h>
 #include <AuxTaskRT.h>
+#include <stdexcept>
 
 Scope::Scope(): isUsingOutBuffer(false), 
                 isUsingBuffer(false), 
@@ -587,9 +588,9 @@ void Scope::scope_control_data(const char* data){
 void Scope::parse_settings(JSONValue* value){
 	// printf("parsing settings\n");
 	std::vector<std::wstring> keys = value->ObjectKeys();
-	for (auto key : keys){
+	for (auto& key : keys){
 		JSONValue *key_value = value->Child(key.c_str());
-		if (key_value->IsNumber())
+		if (key_value && key_value->IsNumber())
 			setSetting(key, (float)key_value->AsNumber());
 	}
 }
